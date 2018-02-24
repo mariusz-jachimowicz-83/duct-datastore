@@ -1,0 +1,1 @@
+{:duct.module.datastore/sql [:duct/module]}
