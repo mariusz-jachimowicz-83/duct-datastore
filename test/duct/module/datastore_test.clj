@@ -36,7 +36,6 @@
                                  [:migrator/m2 :ds/p2]]
                    :testing []}}})
 
-
 (deftest configuration-test
   (is (= (merge base-config
                 {[:duct.database.sql/hikaricp :ds/p1]
