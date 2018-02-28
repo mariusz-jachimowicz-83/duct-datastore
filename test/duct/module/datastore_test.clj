@@ -24,8 +24,8 @@
 (def base-config
   {::duct/environment :development
    :duct/logger {}
-   :duct.module.datastore/sql
 
+   :duct.module.datastore/sql
    {:datastores {:ds/p1 {:database-url "jdbc:sqlite:db_1"}
                  :ds/p2 {:database-url "jdbc:sqlite:db_2"}}
     :migrators {:migrator/m1 {}
