@@ -1,4 +1,4 @@
-(defproject com.mjachimowicz/duct-datastore "0.1.0-SNAPSHOT"
+(defproject com.mjachimowicz/duct-datastore "0.1.0"
   :description "Very simple email sender component for Duct framework"
   :url "https://github.com/mariusz-jachimowicz-83/duct-datastore"
   :license {:name "Eclipse Public License"
