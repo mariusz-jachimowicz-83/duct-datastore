@@ -1,1 +1,2 @@
-{:duct.module.datastore/sql [:duct/module]}
+{:duct.module.datastore/sql [:duct/module]
+ :duct.migrator/ragtime [:duct/migrator]}

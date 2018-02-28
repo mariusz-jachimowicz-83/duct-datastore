@@ -4,12 +4,18 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0-beta4"]
-                 [duct/core "0.6.1"]
+                 [duct/core   "0.6.1"]
                  [duct/logger "0.2.1"]
                  [duct/database.sql.hikaricp "0.3.2"]
-                 [duct/migrator.ragtime "0.2.1"]
+
+                 ;; waiting for my PR to be merged
+                 ;; https://github.com/duct-framework/migrator.ragtime/pull/5
+                 ;; [duct/migrator.ragtime "0.2.1"]
+                 [pandect "0.6.1"]
+                 [ragtime "0.7.2"]
+
                  [integrant "0.6.1"]
-                 [medley "1.0.0"]]
+                 [medley    "1.0.0"]]
   :deploy-repositories [["clojars" {:sign-releases false}]]
 
   ;; lein cloverage --fail-threshold 95
