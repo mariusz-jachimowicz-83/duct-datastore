@@ -79,7 +79,8 @@
   (migrate index options))
 
 (defmethod ig/init-key ::sql [key {:keys [up down] :as opts}]
-  (-> (jdbc/sql-migration {:id   (:id opts (clean-key ::sql key))
-                           :up   (mapv get-string up)
-                           :down (mapv get-string down)})
-      (add-hash-to-id)))
+  (-> {:id   (:id opts (clean-key ::sql key))
+       :up   (mapv get-string up)
+       :down (mapv get-string down)}
+      jdbc/sql-migration
+      add-hash-to-id))
