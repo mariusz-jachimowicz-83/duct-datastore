@@ -3,6 +3,8 @@ Duct module for configuring and run data stores and apply migrations to them
 
 [![CircleCI](https://circleci.com/gh/mariusz-jachimowicz-83/duct-datastore.svg?style=svg)](https://circleci.com/gh/mariusz-jachimowicz-83/duct-datastore)
 
+[![Dependencies Status](https://jarkeeper.com/mariusz-jachimowicz-83/duct-datastore/status.svg)](https://jarkeeper.com/mariusz-jachimowicz-83/duct-datastore)
+
 ## Installation
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.mjachimowicz/duct-datastore.svg)](https://clojars.org/com.mjachimowicz/duct-datastore)
