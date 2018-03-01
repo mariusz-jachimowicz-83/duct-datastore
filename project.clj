@@ -1,5 +1,5 @@
 (defproject com.mjachimowicz/duct-datastore "0.1.0"
-  :description "Very simple email sender component for Duct framework"
+  :description "Duct module for configuring and run multiple datastores and apply migrations to them"
   :url "https://github.com/mariusz-jachimowicz-83/duct-datastore"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
