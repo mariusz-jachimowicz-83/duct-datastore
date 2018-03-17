@@ -6,7 +6,8 @@
     [duct.core       :as duct]
     [duct.core.env   :as env]
     [duct.core.merge :as merge]
-    [integrant.core  :as ig]))
+    [integrant.core  :as ig]
+    [ragtime.clj.core]))
 
 (defn- get-environment [config options]
   (:environment options (:duct.core/environment config :production)))
@@ -39,21 +40,34 @@
              :logger     (ig/ref :duct/logger)
              :migrations []}})
 
+(defn- seeder-config [id environment db-id]
+  {[:duct.seeder/ragtime id]
+   ^:demote {:migrations-table (->name id)
+             :database   (ig/ref [:duct.database.sql/hikaricp db-id])
+             :strategy   (env-strategy environment)
+             :logger     (ig/ref :duct/logger)
+             :migrations []}})
+
+
 (defmethod ig/init-key :duct.module.datastore/sql [_ options]
   {:req #{:duct/logger}
    :fn  (fn [config]
           (let [environment (get-environment config options)
+                components (get-in options [:environments environment])
                 dbs (->> (get-in options [:environments environment])
                          (map second)
                          distinct
                          (map #(database-config %
                                                 (get-in options [:datastores % :database-url]))))
-                migs (map (fn [[mig-id db-id]]
-                            (migrator-config mig-id
-                                             environment
-                                             db-id))
-                          (get-in options [:environments environment]))]
-            (->> (concat [config] dbs migs)
+                migs (map (fn [[migrator-id db-id]]
+                            (migrator-config migrator-id environment db-id))
+                          components)
+                seeds (map (fn [[_ db-id seeder-id]]
+                             (println db-id)
+                             (when seeder-id
+                               (seeder-config seeder-id environment db-id)))
+                           components)]
+            (->> (concat [config] dbs migs seeds)
                  (apply duct/merge-configs))))})
 
 #_(defmethod ig/init-key :duct.module.datastore/cassandra [_ options]

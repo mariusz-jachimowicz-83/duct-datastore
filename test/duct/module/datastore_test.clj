@@ -30,10 +30,12 @@
                  :ds/p2 {:database-url "jdbc:sqlite:db_2"}}
     :migrators {:migrator/m1 {}
                 :migrator/m2 {}}
+    :seeders {:seeder/s1 {}
+              :seeder/s2 {}}
     :environments {:production [[:migrator/m1 :ds/p1]
                                 [:migrator/m2 :ds/p2]]
-                   :development [[:migrator/m1 :ds/p1]
-                                 [:migrator/m2 :ds/p2]]
+                   :development [[:migrator/m1 :ds/p1 :seeder/s1]
+                                 [:migrator/m2 :ds/p2 :seeder/s2]]
                    :testing []}}})
 
 (deftest configuration-test
@@ -58,7 +60,22 @@
                   :database (ig/ref [:duct.database.sql/hikaricp :ds/p2])
                   :strategy :rebase,
                   :logger (ig/ref :duct/logger)
-                  :migrations []}})
+                  :migrations []}
+
+                 [:duct.seeder/ragtime :seeder/s1]
+                 {:migrations-table "seeder_s1",
+                  :database (ig/ref [:duct.database.sql/hikaricp :ds/p1]),
+                  :strategy :rebase
+                  :logger (ig/ref :duct/logger)
+                  :migrations []}
+
+                 [:duct.seeder/ragtime :seeder/s2]
+                 {:migrations-table "seeder_s2",
+                  :database (ig/ref [:duct.database.sql/hikaricp :ds/p2])
+                  :strategy :rebase,
+                  :logger (ig/ref :duct/logger)
+                  :migrations []}
+                 })
          (duct/prep base-config))))
 
 (def component-1-config
@@ -80,7 +97,9 @@
 
    [:duct.migrator.ragtime/sql ::create-bar]
    {:up   ["CREATE TABLE bar (id int);"]
-    :down ["DROP TABLE bar;"]}})
+    :down ["DROP TABLE bar;"]}
+
+   })
 
 (defmethod ig/init-key :component/a [_ options] options)
 (defmethod ig/init-key :component/b [_ options] options)
@@ -116,8 +135,8 @@
         (is (spec-4-db? db-spec2 "db_2")))
 
       (testing "migration table and migrations applied"
-        (is (= #{"migrator_m1" "foo"} (table-names db-spec1)))
-        (is (= #{"migrator_m2" "bar"} (table-names db-spec2))))
+        (is (= #{"migrator_m1" "seeder_s1" "foo"} (table-names db-spec1)))
+        (is (= #{"migrator_m2" "seeder_s2" "bar"} (table-names db-spec2))))
 
       (try
         (finally

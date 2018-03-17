@@ -5,6 +5,7 @@
             [pandect.algo.sha1 :refer [sha1]]
             [ragtime.core :as ragtime]
             [ragtime.jdbc :as jdbc]
+            [ragtime.clj.core]
             [ragtime.reporter :as reporter]
             [ragtime.strategy :as strategy]))
 
@@ -84,3 +85,17 @@
        :down (mapv get-string down)}
       jdbc/sql-migration
       add-hash-to-id))
+
+(defmethod ig/init-key :duct.seeder/ragtime [_ options]
+  (migrate {} options))
+
+(defmethod ig/resume-key :duct.seeder/ragtime [_ options _ index]
+  (migrate index options))
+
+(defmethod ig/init-key ::clj [key {:keys [up down] :as opts}]
+  (-> {:id   (:id opts (clean-key ::sql key))
+       :up   (mapv get-string up)
+       :down (mapv get-string down)}
+      jdbc/sql-migration
+      add-hash-to-id))
+

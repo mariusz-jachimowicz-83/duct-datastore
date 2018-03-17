@@ -13,6 +13,7 @@
                  ;; [duct/migrator.ragtime "0.2.1"]
                  [pandect "0.6.1"]
                  [ragtime "0.7.2"]
+                 [com.mjachimowicz/ragtime-clj "0.1.0"]
 
                  [integrant "0.6.1"]
                  [medley    "1.0.0"]]

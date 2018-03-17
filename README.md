@@ -19,6 +19,8 @@ To add this module to your configuration, add and configure the `:duct.module.da
                :ds/db2 {:database-url "jdbc:sqlite:db_2"}}
   :migrators {:migrator/m1 {}
               :migrator/m2 {}}
+  :seeders {:seeder/s1 {}
+            :seeder/s2 {}}
   :environments {:production [[:migrator/m1 :ds/db1]
                               [:migrator/m2 :ds/db2]]
                  :development [[:migrator/m1 :ds/db1]
@@ -45,14 +47,25 @@ You can configure each migrator by this composite key.
   :logger (ig/ref :duct/logger)
   :migrations []}}
 ```
+`:seeders` key requires to specify ids for migrators. After launch there will be migrators available under composite keys in form `[:duct.seeder/ragtime :some-namespace/some-name]`.  
+You can configure each migrator by this composite key.
+
+```clojure
+{[:duct.seeder/ragtime :seeder/m2]
+ {:migrations-table "seeder_m2",
+  :database (ig/ref [:duct.database.sql/hikaricp :ds/p2])
+  :strategy :rebase,
+  :logger (ig/ref :duct/logger)
+  :migrations []}}
+```
 
 `:environments` key requires to specify combination of databasees and migrators for each your environment. Module will launch onlu db pools and migrators specified in particular environment. 
 
 ```clojure
 {:environments {:production [[:migrator/m1 :ds/p1]
                              [:migrator/m2 :ds/p2]]
-                :development [[:migrator/m1 :ds/p1]
-                              [:migrator/m2 :ds/p2]]}}
+                :development [[:migrator/m1 :ds/p1 :seeder/s1]
+                              [:migrator/m2 :ds/p2 :seeder/s2]]}}
 ```
 
 ## License
